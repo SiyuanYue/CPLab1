@@ -39,6 +39,17 @@ yyerror(char* msg);
 %token SEMI
 %token ASSIGNOP
 
+%nonassoc LOWER_THAN_ELSE
+%nonassoc ELSE
+
+%right ASSIGNOP
+%left OR
+%left AND
+%left RELOP
+%left PLUS MINUS
+%left STAR DIV
+%right UNIT
+%left LP RP LB RB DOT
 %%
 //HIGH-LEVEL
 Program : ExtDefList
@@ -86,7 +97,7 @@ StmtList : Stmt StmtList //语句们
 Stmt : Exp SEMI //语句定义
 | CompSt
 | RETURN Exp SEMI
-| IF LP Exp RP Stmt
+| IF LP Exp RP Stmt %prec LOWER_THAN_ELSE
 | IF LP Exp RP Stmt ELSE Stmt
 | WHILE LP Exp RP Stmt
 ;
@@ -112,8 +123,8 @@ Exp : Exp ASSIGNOP Exp
 | Exp STAR Exp
 | Exp DIV Exp
 | LP Exp RP
-| MINUS Exp
-| NOT Exp
+| MINUS Exp %prec UNIT
+| NOT Exp  %prec UNIT
 | ID LP Args RP                     //函数调用表达式
 | ID LP RP                          //函数调用表达式
 | Exp LB Exp RB                     //数组访问

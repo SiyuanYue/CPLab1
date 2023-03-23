@@ -75,7 +75,9 @@ extern int yydebug;
     COMMA = 281,
     DOT = 282,
     SEMI = 283,
-    ASSIGNOP = 284
+    ASSIGNOP = 284,
+    LOWER_THAN_ELSE = 285,
+    UNIT = 286
   };
 #endif
 
@@ -89,7 +91,7 @@ union YYSTYPE
     float type_float;
     char* type_str;
 
-#line 93 "syntax.tab.h"
+#line 95 "syntax.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
