@@ -1,0 +1,5 @@
+test*.c
+*.tab.c
+lab1
+lex.yy.c
+
