@@ -11,7 +11,7 @@ ast_tree_t *new_node_int(char *name,int int_data,int lineno)
     new_node->flag=1;
     new_node->lineno=lineno;
     new_node->int_data=int_data;
-    new_node->fir=new_node->next=NULL;
+    new_node->child=new_node->next=NULL;
     strcpy(new_node->name,name);
     return new_node;
 }
@@ -23,7 +23,7 @@ ast_tree_t *new_node_str(char *name,char* str_data,int lineno)
     new_node->lineno=lineno;
     strcpy(new_node->str_data,str_data);
     strcpy(new_node->name,name);
-    new_node->fir=new_node->next=NULL;
+    new_node->child=new_node->next=NULL;
     return new_node;
 }
 ast_tree_t *new_node_float(char *name,float float_data,int lineno){
@@ -32,7 +32,7 @@ ast_tree_t *new_node_float(char *name,float float_data,int lineno){
     new_node->flag=2;
     new_node->lineno=lineno;
     new_node->float_data=float_data;
-    new_node->fir=new_node->next=NULL;
+    new_node->child=new_node->next=NULL;
     strcpy(new_node->name,name);
     return new_node;
 }
@@ -42,7 +42,7 @@ ast_tree_t *new_node_noval(char *name,int lineno)//建立没有属性值的词�
     assert(new_node);
     new_node->flag=0;
     new_node->lineno=lineno;
-    new_node->fir=new_node->next=NULL;
+    new_node->child=new_node->next=NULL;
     strcpy(new_node->name,name);
     return new_node;
 }
@@ -52,7 +52,7 @@ static ast_tree_t *new_node_syn(char *name) //建立非终结符（语法单元�
     assert(new_node);
     new_node->flag=4;
     new_node->lineno=0;
-    new_node->fir=NULL;
+    new_node->child=NULL;
     new_node->next=NULL;
     strcpy(new_node->name,name);
     return new_node;
@@ -68,7 +68,7 @@ ast_tree_t * creatAst(char *name,int len,...)
     va_start(valist,len);
     ast_tree_t *temp=va_arg(valist,ast_tree_t *);
     assert(temp);
-    node->fir=temp;
+    node->child=temp;
     node->lineno=temp->lineno;
     for (size_t i = 1; i < len; i++)
     {
@@ -82,10 +82,10 @@ void printAst(ast_tree_t *root,int depth)
     if(root==NULL)
         return;
 
-    if(!(root->flag==4&&root->fir==NULL)) //当是产生空串的产生式，不要打印一堆空格
+    if(!(root->flag==4&&root->child==NULL)) //当是产生空串的产生式，不要打印一堆空格
         for (size_t i = 0; i < depth; i++)  printf(" "); //根据当前语法节点所在深度打印对应的空格数（缩进）
 
-    if(root->flag==4&&root->fir!=NULL) //当前结点是一个语法单元并且该语法单元没有产生空串
+    if(root->flag==4&&root->child!=NULL) //当前结点是一个语法单元并且该语法单元没有产生空串
         printf("%s (%d)\n",root->name,root->lineno);
     else if(root->flag==0) //无属性值的词法单元
     {
@@ -103,6 +103,6 @@ void printAst(ast_tree_t *root,int depth)
     {
         printf("%s %s\n",root->name,root->str_data);
     }
-    printAst(root->fir,depth+1);
+    printAst(root->child,depth+1);
     printAst(root->next,depth);
 }

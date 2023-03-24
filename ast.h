@@ -8,7 +8,7 @@ typedef struct AST_tree_t
 {
     int lineno;
     int flag;
-    struct AST_tree_t *fir,*next; //第一个子节点 和 下一个兄弟节点
+    struct AST_tree_t *child,*next; //第一个子节点 和 下一个兄弟节点
     char name[50];
     union
     {
