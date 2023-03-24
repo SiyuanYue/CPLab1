@@ -1,5 +1,8 @@
 test*.c
 *.tab.c
+*.tab.h
 lab1
 lex.yy.c
+lex.yy.h
+
 

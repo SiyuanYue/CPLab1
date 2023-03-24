@@ -1,6 +1,7 @@
 %{
 #include "lex.yy.h"
 #include <stdlib.h>
+#include <string.h>
 #include "syntax.tab.h"
 int yycolumn = 1;
 #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno; \
@@ -46,45 +47,50 @@ SPACE [ \t]
 
 %%
 {TYPE} {
-    yylval.type_str=yytext;
+    //strcpy(yylval.type_str,yytext);
+    yylval.tree_node=new_node_str("TYPE",yytext,yylineno);
     return TYPE;
 }
-{IF} {return IF;}
+{IF} {yylval.tree_node=new_node_noval("IF",yylineno);return IF;}
 {INT}|{INT_HEX}|{INT_OCT} {
-    yylval.type_int=atoi(yytext);
+    //yylval.type_int=atoi(yytext);
+    yylval.tree_node=new_node_int("INT",atoi(yytext),yylineno);
     return INT;
 }
 {FLOAT} {
-    yylval.type_float=atof(yytext);
+    //yylval.type_float=atof(yytext);
+    yylval.tree_node=new_node_float("TYPE",atof(yytext),yylineno);
     return FLOAT;
 }
-{ELSE} {return ELSE;}
-{WHILE} {return WHILE;}
-{STRUCT} {return STRUCT;}
-{RETURN} {return RETURN;}
-{PLUS} {return PLUS;}
-{MINUS} {return MINUS;}
-{STAR} {return STAR;}
-{DIV} {return DIV;}
-{OR} {return OR;}
-{AND} {return AND;}
-{NOT} {return NOT;}
-{LC} {return LC;}
-{RC} {return RC;}
-{LB} {return LB;}
-{RB} {return RB;}
-{COMMA} {return COMMA;}
-{DOT} {return DOT;}
-{SEMI} {return SEMI;}
-{LP} {return LP;}
-{RP} {return RP;}
-{ASSIGNOP} {return ASSIGNOP;}
+{ELSE} {yylval.tree_node=new_node_noval("ELSE",yylineno);return ELSE;}
+{WHILE} {yylval.tree_node=new_node_noval("WHILE",yylineno);return WHILE;}
+{STRUCT} {yylval.tree_node=new_node_noval("STRUCT",yylineno);return STRUCT;}
+{RETURN} {yylval.tree_node=new_node_noval("RETURN",yylineno);return RETURN;}
+{PLUS} {yylval.tree_node=new_node_noval("PLUS",yylineno);return PLUS;}
+{MINUS} {yylval.tree_node=new_node_noval("MINUS",yylineno);return MINUS;}
+{STAR} {yylval.tree_node=new_node_noval("STAR",yylineno);return STAR;}
+{DIV} {yylval.tree_node=new_node_noval("DIV",yylineno);return DIV;}
+{OR} {yylval.tree_node=new_node_noval("OR",yylineno);return OR;}
+{AND} {yylval.tree_node=new_node_noval("AND",yylineno);return AND;}
+{NOT} {yylval.tree_node=new_node_noval("NOT",yylineno);return NOT;}
+{LC} {yylval.tree_node=new_node_noval("LC",yylineno);return LC;}
+{RC} {yylval.tree_node=new_node_noval("RC",yylineno);return RC;}
+{LB} {yylval.tree_node=new_node_noval("LB",yylineno);return LB;}
+{RB} {yylval.tree_node=new_node_noval("RB",yylineno);return RB;}
+{COMMA} {yylval.tree_node=new_node_noval("COMMA",yylineno);return COMMA;}
+{DOT} {yylval.tree_node=new_node_noval("DOT",yylineno);return DOT;}
+{SEMI} {yylval.tree_node=new_node_noval("SEMI",yylineno);return SEMI;}
+{LP} {yylval.tree_node=new_node_noval("LP",yylineno);return LP;}
+{RP} {yylval.tree_node=new_node_noval("RP",yylineno);return RP;}
+{ASSIGNOP} {yylval.tree_node=new_node_noval("ASSIGNOP",yylineno);return ASSIGNOP;}
 {RELOP} {
-    yylval.type_str=yytext;
+    //strcpy(yylval.type_str,yytext);
+    yylval.tree_node=new_node_str("RELOP",yytext,yylineno);
     return RELOP;
 }
 {ID} {
-    yylval.type_str=yytext;
+    //strcpy(yylval.type_str,yytext);
+    yylval.tree_node=new_node_str("ID",yytext,yylineno);
     return ID;
 }
 {SPACE} {/*do nothing */ }
@@ -92,30 +98,7 @@ SPACE [ \t]
     yycolumn=1;
 }
 . {
-    printf("Error type A at Line %d: Mysterious characters \'%s\'\n",yylineno,yytext);
+    printf("Error type A at Line %d: Mysterious characters \"%s\".\n",yylineno,yytext);
 }
 %%
-// int main(int argc, char **argv)
-// {
-//     int i, totchars = 0, totwords = 0, totlines = 0;
-//     if (argc < 2)
-//     {
-//         yylex();
-//         return 0;
-//     }
-//     for (i = 1; i < argc; i++)
-//     {
-//         FILE *f = fopen(argv[i], "r");
-//         if (!f)
-//         {
-//             perror(argv[i]);
-//             return 1;
-//         }
-//         yyrestart(f);
-//         yylex();
-//         fclose(f);
-//         printf("\n");
-//     }
-//     return 0;
-// }
 
