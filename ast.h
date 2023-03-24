@@ -12,7 +12,7 @@ typedef struct AST_tree_t
     char name[50];
     union
     {
-        char* str_data;
+        char str_data[20];
         int int_data;
         float float_data;
     };
@@ -25,4 +25,4 @@ ast_tree_t *new_node_float(char *name,float float_data,int lineno);
 ast_tree_t *new_node_noval(char *name,int lineno);
 ast_tree_t * creatAst(char *name,int len,...);
 
-void eval(ast_tree_t *root);
+void printAst(ast_tree_t *root,int depth);

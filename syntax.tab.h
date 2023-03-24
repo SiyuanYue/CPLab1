@@ -87,12 +87,9 @@ union YYSTYPE
 {
 #line 8 "syntax.y"
 
-    // int type_int;
-    // float type_float;
-    // char* type_str;
     struct AST_tree_t *tree_node;
 
-#line 96 "syntax.tab.h"
+#line 93 "syntax.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

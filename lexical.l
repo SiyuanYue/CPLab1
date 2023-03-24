@@ -99,6 +99,7 @@ SPACE [ \t]
 }
 . {
     printf("Error type A at Line %d: Mysterious characters \"%s\".\n",yylineno,yytext);
+    exit(1);
 }
 %%
 

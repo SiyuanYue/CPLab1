@@ -6,9 +6,6 @@
 %}
 %locations
 %union{
-    // int type_int;
-    // float type_float;
-    // char* type_str;
     struct AST_tree_t *tree_node;
 }
 /* declared tokens */
@@ -39,9 +36,9 @@
 %token <tree_node>DOT
 %token <tree_node>SEMI
 %token <tree_node>ASSIGNOP
-%type  <tree_node> Program ExtDefList ExtDef ExtDecList Specifier StructSpecifier
-OptTag Tag VarDec FunDec VarList ParamDec CompSt StmtList Stmt DefList Def DecList Dec Exp Args
-
+%type  <tree_node> Program ExtDefList ExtDef ExtDecList
+Specifier StructSpecifier OptTag Tag VarDec FunDec VarList ParamDec
+CompSt StmtList Stmt DefList Def DecList Dec Exp Args
 
 
 %nonassoc LOWER_THAN_ELSE
@@ -61,7 +58,7 @@ OptTag Tag VarDec FunDec VarList ParamDec CompSt StmtList Stmt DefList Def DecLi
 // CompSt : error RC
 // Exp : error RP
 //HIGH-LEVEL
-Program : ExtDefList {$$=creatAst("Program",1,$1);}
+Program : ExtDefList {$$=creatAst("Program",1,$1);printAst($$,0);}
 ;
 ExtDefList : ExtDef ExtDefList {$$=creatAst("ExtDefList",2,$1,$2);}
 |   {$$=creatAst("ExtDefList",0,NULL);}        //空串
