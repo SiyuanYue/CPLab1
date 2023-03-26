@@ -53,10 +53,6 @@ CompSt StmtList Stmt DefList Def DecList Dec Exp Args
 %right UNIT
 %left LP RP LB RB DOT
 %%
-//ERROR HADLING TODO
-// Stmt : error SEMI
-// CompSt : error RC
-// Exp : error RP
 //HIGH-LEVEL
 Program : ExtDefList {$$=creatAst("Program",1,$1);printAst($$,0);}
 ;
@@ -96,6 +92,7 @@ ParamDec : Specifier VarDec {$$=creatAst("ParamDec",2,$1,$2);}           //一�
 ;
 //Statements
 CompSt : LC DefList StmtList RC {$$=creatAst("CompSt",4,$1,$2,$3,$4);} //语块{...}包含局部定义语句和其他语句
+| error RC {yyerror("Missing \";\"");}
 ;
 StmtList : Stmt StmtList {$$=creatAst("StmtList",2,$1,$2);} //语句们
 |   {$$=creatAst("StmtList",0,NULL);}
@@ -106,6 +103,7 @@ Stmt : Exp SEMI {$$=creatAst("Stmt",2,$1,$2);}//语句定义
 | IF LP Exp RP Stmt {$$=creatAst("Stmt",5,$1,$2,$3,$4,$5);} %prec LOWER_THAN_ELSE
 | IF LP Exp RP Stmt ELSE Stmt   {$$=creatAst("Stmt",7,$1,$2,$3,$4,$5,$6,$7);}
 | WHILE LP Exp RP Stmt  {$$=creatAst("Stmt",5,$1,$2,$3,$4,$5);}
+| error SEMI {yyerror("Missing \"Exp\"");}
 ;
 //Local Definitions                     //局部变量定义
 DefList : Def DefList   {$$=creatAst("DefList",2,$1,$2);}
@@ -138,13 +136,18 @@ Exp : Exp ASSIGNOP Exp {$$=creatAst("Exp",3,$1,$2,$3);}
 | ID     {$$=creatAst("Exp",1,$1);}
 | INT    {$$=creatAst("Exp",1,$1);}
 | FLOAT  {$$=creatAst("Exp",1,$1);}
+| INT error ID{yyerror("Missing \";\"");}
+| FLOAT error ID{yyerror("Missing \";\"");}
+//| error RP {yyerror("LP");}
 ;
 Args : Exp COMMA Args   {$$=creatAst("Args",3,$1,$2,$3);}         //实参列表
 | Exp    {$$=creatAst("Args",1,$1);}
 ;
+//ERROR HADLING TODO
+
 %%
 void
 yyerror(char* msg) {
     //fprintf(stderr, "suntax error: %s\n", msg);
-    printf("Error type B at Line %d: Missing \"%s\".\n",yylineno,yytext);
+    printf("Error type B at Line %d: %s.\n",yylineno,msg);
 }

@@ -52,9 +52,19 @@ SPACE [ \t]
     return TYPE;
 }
 {IF} {yylval.tree_node=new_node_noval("IF",yylineno);return IF;}
-{INT}|{INT_HEX}|{INT_OCT} {
+{INT} {
     //yylval.type_int=atoi(yytext);
     yylval.tree_node=new_node_int("INT",atoi(yytext),yylineno);
+    return INT;
+}
+{INT_OCT} {
+    char *s;
+    yylval.tree_node=new_node_int("OCT",strtol(yytext,&s,8),yylineno);
+    return INT;
+}
+{INT_HEX} {
+    char *s;
+    yylval.tree_node=new_node_int("HEX",strtol(yytext,&s,16),yylineno);
     return INT;
 }
 {FLOAT} {
